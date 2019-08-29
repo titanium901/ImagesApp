@@ -25,6 +25,8 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = false
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
+        metaInfoLabel.alpha = 0
+        downloadInfoLabel.alpha = 0
         activityIndicator.startAnimating()
         
         
@@ -39,6 +41,10 @@ class DetailViewController: UIViewController {
                     self.imageView.image = UIImage(data: imageData)
                     self.metaInfoLabel.text = data?.description.filter { $0 != "}" && $0 != "{" && $0 != ";"  }
                     self.downloadInfoLabel.text = imageToLoad.time
+                    UIView.animate(withDuration: 1, animations: {
+                        self.metaInfoLabel.alpha = 1
+                        self.downloadInfoLabel.alpha = 1
+                    })
                     
                 }
             }
