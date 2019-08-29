@@ -6,35 +6,25 @@
 //  Copyright © 2019 Yury Popov. All rights reserved.
 //
 
-
-
-
-/*
-Добрый день/вечер! Спасибо! Интересное задание, многое было в новинку и многое к сожалению не получилось
-Первое это с загрузкой проблемы. Плавную красивую подзагрузку не смог реализовать
-Для кэша картинок выбрал SDWebImage, пробывал еще Kingfisher. Но там возникли большие проблемы с памятью и приложение всегда крашилось. С NSCache не успел разобраться.
- И конечно с проверкой конекта так себе решение. По хорошему надо было сделать наверно notification и загружать к примеру 10 дефолтных картинок при загрузке приложения.
- Хорошего дня!
-*/
 import UIKit
-import SDWebImage
+import Kingfisher
+
 
 class ImagesViewController: UICollectionViewController {
-  
+   
+    let cache = KingfisherManager.shared.cache
     
-    //MARK: - Properties
     var photos = [Photo]()
     var photos2 = [Photo]()
     var defImages = [String]()
     var responseString = String()
     var downloadTime = String()
-    var isConnection = CheckInternet.Connection()
+    var connection = Bool()
     var page: Int = 2 {
         didSet {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.getImages(strUrl: "https://picsum.photos/v2/list?page=" + "\(self.page)" + "&limit=100") { () -> (Void) in
-                    print("done \(self.page)")
-                    
+            DispatchQueue.global(qos: .background).async { [weak self] in
+                self?.getImages(strUrl: "https://picsum.photos/v2/list?page=" + "\(self!.page)" + "&limit=100") { () -> (Void) in
+                    print("done \(String(describing: self?.page))")
                     
                 }
             }
@@ -44,14 +34,15 @@ class ImagesViewController: UICollectionViewController {
     
     var baseUrl = "https://picsum.photos/v2/list?page=2&limit=100"
     
-    //MARK: - override Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         print(#function)
         navigationController?.isNavigationBarHidden = true
+        KingfisherManager.shared.cache.memoryStorage.config.totalCostLimit = 30 * 1024
         
-        if CheckInternet.Connection() {
+        if CheckInternet.Connection(){
             print("Connect")
+            connection = true
             getImage(strUrl: baseUrl) { [weak self] in
                 print("done")
                 DispatchQueue.main.async {
@@ -63,14 +54,18 @@ class ImagesViewController: UICollectionViewController {
             
         else {
             print("Disconnect")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            connection = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
                 let ac = UIAlertController(title: "Connection Error", message: "Please chech your connection and reload the app", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Ok", style: .default))
-                self.present(ac, animated: true)
+                self?.present(ac, animated: true)
+                self?.defImages.append("back2")
             }
             
             
         }
+        
+        
         
         
         
@@ -88,18 +83,18 @@ class ImagesViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         
-        return isConnection ? photos.count : defImages.count
+        return connection ? photos.count : defImages.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? ImageCell else {
             fatalError("Unable to dequeue PersonCell")
         }
-
+        
         let image = photos[indexPath.item]
-        DispatchQueue.main.async {
-            cell.imageView.sd_setImage(with: URL(string: image.download_url), placeholderImage: UIImage(named: image.download_url))
-        }
+        let imageUrl: URL? = URL(string: image.download_url)
+        cell.imageView.kf.setImage(with: imageUrl)
+        
 
         return cell
     }
@@ -107,6 +102,12 @@ class ImagesViewController: UICollectionViewController {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if photos.count - 1 == indexPath.row {
+            
+        }
+        print(photos.count)
+        print(indexPath.row)
+        guard page < 10 else { return }
         if indexPath.row == 50 {
             page += 1
         } else if indexPath.row == 100 {
@@ -115,10 +116,24 @@ class ImagesViewController: UICollectionViewController {
             page += 1
         } else if indexPath.row == 300 {
             page += 1
-        } else if indexPath.row > 400 {
+        } else if indexPath.row == 400 {
             page += 1
+        } else if indexPath.row == 500 {
+            page += 1
+        } else if indexPath.row == 600 {
+//            page += 1
+        } else if indexPath.row == 700 {
+//            page += 1
+        } else if indexPath.row > 800 {
+            print(page)
+//            if page >= 9 {
+//
+//            } else {
+//                page += 1
+//            }
+            
         }
-        
+//        print(indexPath.row)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -129,16 +144,17 @@ class ImagesViewController: UICollectionViewController {
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-    
-    //MARK: - Methods
 
     
     func currentTime() -> String {
+        print(#function)
+        let currentDateTime = Date()
         let formatter = DateFormatter()
         formatter.timeStyle = .medium
         formatter.dateStyle = .long
-        let str = formatter.string(from: Date())
-        return str.replacingOccurrences(of: "+0000", with: "", options: [], range: nil)
+        formatter.string(from: currentDateTime)
+        let time = "\(currentDateTime)"
+        return time.replacingOccurrences(of: "+0000", with: "", options: [], range: nil)
         
         
         
@@ -150,10 +166,11 @@ class ImagesViewController: UICollectionViewController {
     }
     
     func getImage(strUrl: String, completion: @escaping () -> (Void)) {
+        print(#function)
         let url = URL(string: strUrl)!
         let request = NSMutableURLRequest(url: url)
         
-        URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+        URLSession.shared.dataTask(with: request as URLRequest) { [weak self] (data, response, error) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 return
@@ -161,12 +178,12 @@ class ImagesViewController: UICollectionViewController {
             
             do {
                 let dataJson = try JSONDecoder().decode([Photo].self, from: data!)
-                self.photos = dataJson
+                self?.photos = dataJson
                 print(dataJson)
                 
                 var index = 0
-                for _ in self.photos {
-                    self.photos[index].time = self.currentTime()
+                for _ in self!.photos {
+                    self?.photos[index].time = self?.currentTime()
                     index += 1
                 }
                 completion()
@@ -179,41 +196,39 @@ class ImagesViewController: UICollectionViewController {
     }
     
     func getImages(strUrl: String, completion: @escaping () -> (Void)) {
+         print(#function)
         DispatchQueue.global(qos: .background).async {
             let url = URL(string: strUrl)!
             let request = NSMutableURLRequest(url: url)
             
-            URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+            URLSession.shared.dataTask(with: request as URLRequest) { [weak self] (data, response, error) in
                 if error != nil {
                     print(error?.localizedDescription as Any)
-                    let ac = UIAlertController(title: "Connection Error", message: "Please chech your connection and reload the app", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "Ok", style: .default))
-                    self.present(ac, animated: true)
                     return
                 }
                 
                 do {
                     let dataJson = try JSONDecoder().decode([Photo].self, from: data!)
-                    self.photos2 = dataJson
+                    self?.photos2 = dataJson
                     print("Json Data2")
-                    if self.photos2.isEmpty {
+                    if self?.photos2.isEmpty ?? true {
+                        print("returnnnnnnn")
+                         print("page \(self?.page)")
                         return
                     }
                     print(dataJson)
                     DispatchQueue.main.async {
                         var index = 0
-                        if index < self.photos2.count {
-                            for _ in self.photos2 {
-                                self.photos2[index].time = self.currentTime()
-                                let insertIndexPath = IndexPath(item: self.photos.count, section: 0)
-                                self.photos.append(self.photos2[index])
-                                self.collectionView.insertItems(at: [insertIndexPath])
-                                index += 1
-                                
-                            }
+                        for _ in self!.photos2 {
+                            self?.photos2[index].time = self?.currentTime()
+                            let insertIndexPath = IndexPath(item: (self?.photos.count)!, section: 0)
+                            self?.photos.append((self?.photos2[index])!)
+                            self?.collectionView.insertItems(at: [insertIndexPath])
+                            index += 1
                         }
-                        
+                        print("page \(self?.page)")
                     }
+                    
                     
                     completion()
                 } catch let error {
@@ -222,8 +237,12 @@ class ImagesViewController: UICollectionViewController {
                 
                 }.resume()
         }
-    
+        
+        
+        
     }
+    
 
+    
 }
 
