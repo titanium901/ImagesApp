@@ -151,15 +151,11 @@ class ImagesViewController: UICollectionViewController {
 
     
     func currentTime() -> String {
-        print(#function)
-        let currentDateTime = Date()
         let formatter = DateFormatter()
         formatter.timeStyle = .medium
         formatter.dateStyle = .long
-        formatter.string(from: currentDateTime)
-        let time = "\(currentDateTime)"
-        return time.replacingOccurrences(of: "+0000", with: "", options: [], range: nil)
-        
+        let str = formatter.string(from: Date())
+        return str.replacingOccurrences(of: "+0000", with: "", options: [], range: nil)
         
         
     }
