@@ -93,7 +93,11 @@ class ImagesViewController: UICollectionViewController {
         
         let image = photos[indexPath.item]
         let imageUrl: URL? = URL(string: image.download_url)
-        cell.imageView.kf.setImage(with: imageUrl)
+//        cell.imageView.kf.setImage(with: imageUrl)
+        
+        let resizingProcessor = ResizingImageProcessor(referenceSize: CGSize(width: cell.imageView.frame.size.width * UIScreen.main.scale, height: cell.imageView.frame.size.height * UIScreen.main.scale))
+        
+        cell.imageView.kf.setImage(with: imageUrl, options: [.backgroundDecode,.processor(resizingProcessor), .scaleFactor(UIScreen.main.scale),.cacheOriginalImage])
         
 
         return cell
@@ -213,7 +217,7 @@ class ImagesViewController: UICollectionViewController {
                     print("Json Data2")
                     if self?.photos2.isEmpty ?? true {
                         print("returnnnnnnn")
-                         print("page \(self?.page)")
+                         print("page \(self!.page)")
                         return
                     }
                     print(dataJson)
@@ -226,7 +230,7 @@ class ImagesViewController: UICollectionViewController {
                             self?.collectionView.insertItems(at: [insertIndexPath])
                             index += 1
                         }
-                        print("page \(self?.page)")
+                        print("page \(self!.page)")
                     }
                     
                     
