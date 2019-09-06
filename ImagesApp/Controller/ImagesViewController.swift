@@ -14,7 +14,7 @@ class ImagesViewController: UICollectionViewController {
    
     let cache = KingfisherManager.shared.cache
     
-    let network = Network()
+    let network = DataService()
     var defImages = [String]()
     var responseString = String()
     var downloadTime = String()

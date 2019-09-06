@@ -8,7 +8,9 @@
 
 import Foundation
 
-class Network {
+class DataService {
+    
+    static let instance = DataService()
     
     var photos = [Photo]()
     var photos2 = [Photo]()

@@ -18,7 +18,7 @@
 		CA631980231550A00062DF13 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63197F231550A00062DF13 /* DetailViewController.swift */; };
 		CA63198D231566790062DF13 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63198C231566790062DF13 /* Photo.swift */; };
 		CA63198F231694FD0062DF13 /* CheckInternet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63198E231694FD0062DF13 /* CheckInternet.swift */; };
-		CA996462232291680006BE94 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA996461232291680006BE94 /* Network.swift */; };
+		CA996462232291680006BE94 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA996461232291680006BE94 /* DataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +37,7 @@
 		CA63197F231550A00062DF13 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		CA63198C231566790062DF13 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		CA63198E231694FD0062DF13 /* CheckInternet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInternet.swift; sourceTree = "<group>"; };
-		CA996461232291680006BE94 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		CA996461232291680006BE94 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +92,7 @@
 			children = (
 				CA63196423154B380062DF13 /* AppDelegate.swift */,
 				CA63198E231694FD0062DF13 /* CheckInternet.swift */,
-				CA996461232291680006BE94 /* Network.swift */,
+				CA996461232291680006BE94 /* DataService.swift */,
 				CA63197C23154D470062DF13 /* View */,
 				CA63197D23154D4E0062DF13 /* Model */,
 				CA63197E23154D530062DF13 /* Controller */,
@@ -247,7 +247,7 @@
 			files = (
 				CA63198F231694FD0062DF13 /* CheckInternet.swift in Sources */,
 				CA63198D231566790062DF13 /* Photo.swift in Sources */,
-				CA996462232291680006BE94 /* Network.swift in Sources */,
+				CA996462232291680006BE94 /* DataService.swift in Sources */,
 				CA63197923154CF80062DF13 /* ImagesViewController.swift in Sources */,
 				CA63197B23154D3A0062DF13 /* Image.swift in Sources */,
 				CA631980231550A00062DF13 /* DetailViewController.swift in Sources */,
