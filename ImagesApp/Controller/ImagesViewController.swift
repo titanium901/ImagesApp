@@ -111,6 +111,9 @@ class ImagesViewController: UICollectionViewController {
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadingCell", for: indexPath) as! LoadingCell
             cell.spinner.startAnimating()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                cell.spinner.stopAnimating()
+            }
             return cell
         }
         

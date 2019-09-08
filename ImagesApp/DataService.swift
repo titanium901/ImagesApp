@@ -42,7 +42,7 @@ class DataService {
                     for _ in self!.photos2 {
                         
                         self?.photos2[index].time = self?.currentTime()
-                        self?.insertIndexPath = IndexPath(item: (self?.photos.count)!, section: 0)
+//                        self?.insertIndexPath = IndexPath(item: (self?.photos.count)!, section: 0)
                         self?.photos.append((self?.photos2[index])!)
                         //                            self?.collectionView.insertItems(at: [insertIndexPath])
                         if index == self?.photos2.count {
