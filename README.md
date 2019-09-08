@@ -3,7 +3,7 @@ All photos from api https://picsum.photos/
 
 Used kingfisher for images cache
 
-![2019-08-30 16-41-34 2019-08-30 16_45_00](https://user-images.githubusercontent.com/30910230/64025525-88cf9c00-cb45-11e9-8eb5-d747de6e3fe9.gif)
+![imageapp](https://user-images.githubusercontent.com/30910230/64487131-134b8600-d23f-11e9-9c30-71aed15b3a2c.gif)
 
 ## Video from a real device on Youtube
 
