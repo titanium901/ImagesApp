@@ -38,16 +38,19 @@ class DataService {
                         return
                     }
                     print(dataJson)
-                    DispatchQueue.main.async {
-                        var index = 0
-                        for _ in self!.photos2 {
-                            self?.photos2[index].time = self?.currentTime()
-                             self?.insertIndexPath = IndexPath(item: (self?.photos.count)!, section: 0)
-                            self?.photos.append((self?.photos2[index])!)
-//                            self?.collectionView.insertItems(at: [insertIndexPath])
-                            completion()
-                            index += 1
+                    var index = 0
+                    for _ in self!.photos2 {
+                        
+                        self?.photos2[index].time = self?.currentTime()
+                        self?.insertIndexPath = IndexPath(item: (self?.photos.count)!, section: 0)
+                        self?.photos.append((self?.photos2[index])!)
+                        //                            self?.collectionView.insertItems(at: [insertIndexPath])
+                        if index == self?.photos2.count {
+                            break
                         }
+                        index += 1
+                        completion()
+                        
                     }
                     
                     

@@ -23,7 +23,13 @@ class ImagesViewController: UICollectionViewController {
         didSet {
             print("didset page")
             network.getImages(strUrl: "https://picsum.photos/v2/list?page=" + "\(self.page)" + "&limit=100") { [weak self] in
-                self?.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self?.collectionView.reloadData()
+
+//                    self?.collectionView.insertItems(at: [(self?.network.insertIndexPath)!])
+                }
+                
+//                self?.collectionView.reloadData()
                 
             }
         }
